@@ -81,11 +81,10 @@ public:
 };
 
 int main() {
-
   queue<int> l;
   int threads = 1000;
   int incs = 100;
-  A<int> expected = 0;
+  A<int> queued = 0;
 
   {
     processes ps;
@@ -94,10 +93,10 @@ int main() {
       ps += [&, i] {
         for (int j=0; j <= incs; j++) {
           l.enqueue(i);
-          ATO expected = expected+1; MIC;
+          ATO queued = queued+1; MIC;
           if (j%2 == 0) {
             l.dequeue();
-            ATO expected = expected - 1; MIC;
+            ATO queued = queued - 1; MIC;
           }
         }
       };
@@ -119,8 +118,8 @@ int main() {
   }
 
   std::cout
-    << "Expected: " << expected << std::endl
-    << ".size(): " << size << std::endl
+    << "Queued: " << queued << std::endl
+    << "Size: " << size << std::endl
     << "Iterated: " << actualSize << std::endl
     << "Dequeued: " <<nSuccessful << std::endl;
 }
